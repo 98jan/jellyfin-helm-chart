@@ -28,8 +28,9 @@ jobs:
         uses: appany/helm-oci-chart-releaser@v0.4.2
         with:
           name: jellyfin
-          repository: 98jan/jellyfin-helm-chart
+          repository: ${{ github.event.repository.name }}
           path: charts/jellyfin
+          # renovate: datasource=docker depName=jellyfin/jellyfin
           tag: 10.9.8
           registry: ghcr.io
           registry_username: ${{ github.actor }}
