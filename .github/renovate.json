@@ -8,7 +8,9 @@
       "automerge": true,
       "automergeType": "branch",
       "commitMessage": "Update Docker image for {{depName}}",
-      "labels": ["docker", "update"]
+      "labels": ["docker", "update"],
+      "allowPostUpgradeCommandTemplating": true,
+      "allowedPostUpgradeCommands":        ["^.*"]
     }
   ],
   "regexManagers": [
