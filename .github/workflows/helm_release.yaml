@@ -3,7 +3,7 @@ name: Release Charts
 on:
   push:
     paths:
-      - 'charts/jellyfin'
+      - 'charts/jellyfin/**'
     branches:
       - master
 
