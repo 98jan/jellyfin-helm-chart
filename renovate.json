@@ -21,5 +21,6 @@
       "depNameTemplate": "{{depName}}",
       "versioningTemplate": "docker"
     }
-  ]
+  ],
+  "includeForks": true
 }
