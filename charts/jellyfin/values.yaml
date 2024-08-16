@@ -19,6 +19,7 @@ fullnameOverride: ""
 # https://jellyfin.org/docs/general/networking/dlna.html
 enableDLNA: false
 
+# configure service
 service:
   type: ClusterIP
   port: 8096
