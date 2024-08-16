@@ -32,7 +32,7 @@ jobs:
         uses: appany/helm-oci-chart-releaser@v0.4.2
         with:
           name: jellyfin
-          repository: ${{ github.event.repository.name }}
+          repository: ${{ github.repository }}
           path: charts/jellyfin
           # renovate: datasource=docker depName=jellyfin/jellyfin
           tag: 10.9.9
