@@ -1,0 +1,25 @@
+{
+  "extends": ["config:base"],
+  "packageRules": [
+    {
+      "description": "Update Docker image based on renovate comment",
+      "matchDatasources": ["docker"],
+      "matchPackagePatterns": [".*"],
+      "automerge": true,
+      "automergeType": "branch",
+      "commitMessage": "Update Docker image for {{depName}}",
+      "labels": ["docker", "update"]
+    }
+  ],
+  "regexManagers": [
+    {
+      "fileMatch": ["^.*\\.yaml$", "^.*\\.yml$"],
+      "matchStrings": [
+        "# renovate: datasource=docker depName=(?<depName>\\S+)\\s+(?<currentValue>.+)"
+      ],
+      "datasourceTemplate": "docker",
+      "depNameTemplate": "{{depName}}",
+      "versioningTemplate": "docker"
+    }
+  ]
+}
