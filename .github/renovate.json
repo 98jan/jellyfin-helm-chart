@@ -29,7 +29,7 @@
         "fileFilters": ["**/Chart.yaml"],
         "executionMode": "branch",
         "allowPostUpgradeCommandTemplating": true,
-        "allowedPostUpgradeCommands": ["^.*"]
+        "allowedPostUpgradeCommands": ["*"]
       }
     }
   ],
