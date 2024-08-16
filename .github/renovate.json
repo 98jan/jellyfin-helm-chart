@@ -10,7 +10,27 @@
       "commitMessage": "Update Docker image for {{depName}}",
       "labels": ["docker", "update"],
       "allowPostUpgradeCommandTemplating": true,
-      "allowedPostUpgradeCommands":        ["^.*"]
+      "allowedPostUpgradeCommands": ["^.*"]
+    },
+    {
+      "matchManagers": ["helm-requirements", "helm-values", "regex"],
+      "postUpgradeTasks": {
+        "commands": [
+          "version=$(grep '^version:' {{{parentDir}}}/charts/jellyfin/Chart.yaml | awk '{print $2}')",
+          "major=$(echo $version | cut -d. -f1)",
+          "minor=$(echo $version | cut -d. -f2)",
+          "patch=$(echo $version | cut -d. -f3)",
+          "minor=$(expr $minor + 1)",
+          "echo XXX",
+          "echo $version",
+          "sed -i \"s/^version:.*/version: ${major}.${minor}.${patch}/g\" {{{parentDir}}}/charts/jellyfin/Chart.yaml",
+          "sed -i \"s/^appVersion:.*/appVersion: ${major}.${minor}.${patch}/g\" {{{parentDir}}}/charts/jellyfin/Chart.yaml"
+        ],
+        "fileFilters": ["**/Chart.yaml"],
+        "executionMode": "branch",
+        "allowPostUpgradeCommandTemplating": true,
+        "allowedPostUpgradeCommands": ["^.*"]
+      }
     }
   ],
   "regexManagers": [
