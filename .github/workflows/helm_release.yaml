@@ -34,8 +34,8 @@ jobs:
           name: jellyfin
           repository: ${{ github.repository }}
           path: charts/jellyfin
-          # renovate: datasource=docker depName=jellyfin/jellyfin
-          tag: 10.9.9
+          # renovate: image=jellyfin/jellyfin
+          tag: 10.9.8
           registry: ghcr.io
           registry_username: ${{ github.actor }}
           registry_password: ${{ secrets.GITHUB_TOKEN }}
