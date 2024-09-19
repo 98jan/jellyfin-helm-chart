@@ -1,48 +1,70 @@
 {
-  "extends": ["config:base"],
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    ":labels(renovate)",
+    ":prHourlyLimit4",
+    ":semanticPrefixFix",
+    ":separateMajorReleases",
+    "config:best-practices",
+    "customManagers:dockerfileVersions",
+    "customManagers:gitlabPipelineVersions",
+    "customManagers:helmChartYamlAppVersions",
+    "docker:enableMajor"
+  ],
+  "ignorePresets": [
+    ":semanticPrefixFixDepsChoreOthers",
+    "docker:pinDigests",
+    "ignoreModulesAndTests"
+  ],
+  "configMigration": true,
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": []
+  },
   "packageRules": [
     {
-      "description": "Update Docker image based on renovate comment",
-      "matchDatasources": ["docker"],
-      "matchPackagePatterns": [".*"],
-      "automerge": true,
-      "automergeType": "branch",
-      "commitMessage": "Update Docker image for {{depName}}",
-      "labels": ["docker", "update"],
-      "allowPostUpgradeCommandTemplating": true,
-      "allowedPostUpgradeCommands": ["^.*"]
+      "description": "Set ci commit type for CI updates",
+      "matchCategories": [
+        "ci"
+      ],
+      "semanticCommitType": "ci"
     },
     {
-      "matchManagers": ["helm-requirements", "helm-values", "regex"],
-      "postUpgradeTasks": {
-        "commands": [
-          "version=$(grep '^version:' {{{parentDir}}}/charts/jellyfin/Chart.yaml | awk '{print $2}')",
-          "major=$(echo $version | cut -d. -f1)",
-          "minor=$(echo $version | cut -d. -f2)",
-          "patch=$(echo $version | cut -d. -f3)",
-          "minor=$(expr $minor + 1)",
-          "echo XXX",
-          "echo $version",
-          "sed -i \"s/^version:.*/version: ${major}.${minor}.${patch}/g\" {{{parentDir}}}/charts/jellyfin/Chart.yaml",
-          "sed -i \"s/^appVersion:.*/appVersion: ${major}.${minor}.${patch}/g\" {{{parentDir}}}/charts/jellyfin/Chart.yaml"
-        ],
-        "fileFilters": ["**/Chart.yaml"],
-        "executionMode": "branch",
-        "allowPostUpgradeCommandTemplating": true,
-        "allowedPostUpgradeCommands": ["*"]
-      }
-    }
-  ],
-  "regexManagers": [
-    {
-      "fileMatch": ["^.*\\.yaml$", "^.*\\.yml$"],
-      "matchStrings": [
-        "# renovate: datasource=docker depName=(?<depName>\\S+)\\s+(?<currentValue>.+)"
+      "description": "Pin docker image digests only in CI",
+      "enabled": true,
+      "matchCategories": [
+        "ci"
       ],
-      "datasourceTemplate": "docker",
-      "depNameTemplate": "{{depName}}",
-      "versioningTemplate": "docker"
+      "matchDatasources": [
+        "docker"
+      ],
+      "pinDigests": true
+    },
+    {
+      "description": "Group indirect go modules",
+      "matchManagers": [
+        "gomod"
+      ],
+      "matchDepTypes": [
+        "indirect"
+      ],
+      "enabled": true
     }
   ],
-  "includeForks": true
+  "flux": {
+    "fileMatch": ["infrastructure/.+\\.yaml$"]
+  },
+  "kubernetes": {
+    "fileMatch": ["\\.yaml$"]
+  },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "datasourceTemplate": "kubernetes",
+      "fileMatch": ["\\.yaml$"],
+      "matchStrings": [
+        "^[ \\t]*#\\s?renovate: image=(?<depName>.*?)\\s?tag:\\s?\"?(?<currentValue>[\\w+\\.\\-]*)"
+      ]
+    }
+  ]
 }
