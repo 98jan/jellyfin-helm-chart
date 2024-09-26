@@ -28,14 +28,28 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+
+      - name: Install Python dependencies
+        run: pip install pyyaml yq
+
+      - name: Get latest release version
+        id: get_latest_release
+        run: |
+          VERSION=$(yq '.version' charts/jellyfin/Chart.yaml)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "Version: $VERSION"
+
       - name: Chart | push
         uses: appany/helm-oci-chart-releaser@dd0551c15abe174eb57824ecde62e976091094da # v0.4.2
         with:
           name: jellyfin
           repository: ${{ github.repository }}
           path: charts/jellyfin
-          # renovate: image=jellyfin/jellyfin
-          tag: 10.9.8
+          tag: ${{ env.VERSION }}
           registry: ghcr.io
           registry_username: ${{ github.actor }}
           registry_password: ${{ secrets.GITHUB_TOKEN }}

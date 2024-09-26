@@ -6,8 +6,8 @@ replicaCount: 1
 
 image:
   repository: docker.io/jellyfin/jellyfin
-  # renovate: image=jellyfin/jellyfin
-  tag: "10.9.8"
+  # by default use image tag of Chart.yaml
+  tag: ""
   pullPolicy: IfNotPresent
 
 nameOverride: ""
